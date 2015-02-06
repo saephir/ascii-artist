@@ -1,0 +1,58 @@
+====================================================
+=                 AsciiArtist                      =
+= simple tool for transforming images to ASCII art =
+=                saephir, 2015                     =
+====================================================
+
+1. Introduction
+
+AsciiArtist is a small utility app which converts
+an input image to a ASCII art in PDF. It's written
+in Java/Swing and uses Apache PDFBox library to
+generate PDF files.
+
+2. Algorithm description
+
+Both versions of conversion algorithm work on the
+one pixel -> one letter principle. The image is
+preprocessed by scaling it down, then scaling to
+match the used font's width/height proportions.
+Afterwards, grayscale conversion is applied.
+
+Simple version performs the transformation by
+counting non-white pixels of a character and
+transforming it to [0;1] normalized value range.
+Currently processed pixel has its luminosity
+converted to the [0;1] too. Then, we choose the
+character that is closest to the pixel's value
+in the terms of normalized value difference.
+
+Extended algorithm version takes into account not
+only the currently processed pixel, but also its
+surroundings. Every character in ASCII set is
+divided to 9 parts (3x3) and each part has its
+non-white pixels counted and luminosity converted
+to [0;1] range. Pixel luminosity value conversion
+is the same as before. The pixel - character
+Euclidean distance function is given as follows:
+
+character division 3x3:
+c1 c2 c3
+c4 c5 c6
+c7 c8 c9
+
+pixel and surroundings:
+p1 p2 p3
+p4 p5 p6
+p7 p8 p9
+
+(p5 is the currently processed pixel)
+
+dist = sqrt((c1 - p1) ^ 2 + ... + (c9 - p9) ^ 2)
+
+3. External usage
+
+You are free to use the code in your own applications,
+mentioning the authorship. Probably AsciiArtConverter
+and PDFExporter are the classes of main interest.
+
